@@ -4,10 +4,23 @@ Tell Claude Code about your product and get a finished, narrated demo video. It 
 
 ## Quick start
 
-**1. Install the plugin** (inside Claude Code):
+**1. Install the plugin.** Pick whichever fits how you use Claude Code.
+
+In the Claude Code terminal app, type:
 ```
 /plugin marketplace add Tusharsaxena2001/walkthru
-/plugin install walkthru
+/plugin install walkthru@walkthru
+```
+
+In an editor panel (for example VS Code) where `/plugin` is not offered, run this in any terminal instead, then restart your Claude session:
+```
+claude plugin marketplace add Tusharsaxena2001/walkthru
+claude plugin install walkthru@walkthru
+```
+
+To try it without installing, start Claude with the plugin loaded from a local copy of this repo:
+```
+claude --plugin-dir /path/to/walkthru
 ```
 
 **2. Ask for a demo**, in your project folder:
