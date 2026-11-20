@@ -30,7 +30,9 @@ claude --plugin-dir /path/to/walkthru
 or just say it in plain words:
 > Make a 3 minute demo video of this app for new customers. Use the free voice.
 
-**3. Approve the storyboard** Claude shows you (scenes, what is said, how long it is). Then wait for the video.
+**3. Say what to record.** Claude reads your project first, then asks what the video should cover (it suggests the features or commands it found), where the product runs (a live URL or locally, which it can start for you), who it is for, how long it should be, and which voice to use. Nothing is recorded until you confirm.
+
+**4. Approve the storyboard** Claude shows you (scenes, what is said, how long it is). Then wait for the video.
 
 That is all. You do not install anything yourself. On the first run Claude sets up the tools it needs (see [What gets installed](#what-gets-installed)).
 

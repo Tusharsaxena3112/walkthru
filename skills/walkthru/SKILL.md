@@ -7,8 +7,13 @@ description: Make a finished, narrated demo video of any product: a website or w
 
 CLI: `node "${CLAUDE_PLUGIN_ROOT}/dist/walkthru.mjs" <command>` (call it `walkthru` below), run from the user's project root. You do all setup yourself; the user never installs anything. Their only jobs are: describe the product, approve the storyboard once, review the video.
 
-## 0. Ask only what you cannot discover (max 4 questions, skip any you can infer)
-Audience and goal; target length (default 3 to 5 minutes); voice (default free local `piper`; `elevenlabs` only if they already have a key); anything off-limits (billing, real customer data, a section to skip). Never ask about tools, formats or setup.
+## 0. Scan the repo, then ask what to record (explicit scope is required)
+First spend a minute reading the project (README, routes or pages, `--help`, `package.json`, docs, any transcripts the user has) so your questions are specific. Then ask, in one batch (use the question tool when you have one; max 4 questions):
+1. **What should the video cover?** Offer the features, pages, commands or modules you found as a multi-select list, plus "something else" and "everything". Say which you recommend for the target length. Never start recording a scope the user has not confirmed.
+2. **Where does it run?** A live URL, or locally. If the README or config names an obvious live URL, propose it instead of asking open-ended. For local, find the start command yourself (`npm run dev`, `docker compose up`, `make run`, README quickstart), start it in the background, wait until its URL answers, use `http://localhost:<port>` as `baseUrl`, and stop it when done. Ask only if you cannot find how to start it or it needs services or credentials only the user has.
+3. **Audience, goal and length** (propose a default, usually 3 to 5 minutes) and **anything off-limits** (billing, real customer data, a section to skip).
+4. **Voice**: free local voice (default, no account) or ElevenLabs (they need a key); recommend free unless they ask for a more natural voice.
+Context from the repo fills the options; the user's answers decide. If the user already stated something (for example "3 minute demo of the checkout flow"), do not ask it again. Never ask about tools, formats or setup.
 
 ## 1. Discover (read, do not guess)
 - **Website / web app**: use the live URL; read routes and source for real labels, or probe with Playwright. Credentials go in `.env.demo` (git-ignored; tell the user to fill it themselves, never read or print it).
