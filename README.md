@@ -1,37 +1,151 @@
 # Walkthru
 
-Describe your product to Claude Code and get a finished, narrated demo video. It works for websites and web apps, CLI tools, AI agents, codebase walkthroughs and tutorials. Manual demos take hours; this takes minutes of your time: you describe, approve a storyboard once, and review the result.
+Tell Claude Code about your product and get a finished, narrated demo video. It works for websites and web apps, CLI tools, AI agents, codebase walkthroughs and tutorials. Making a demo by hand takes hours. With Walkthru you describe the product, approve a storyboard once, and review the result.
 
-## Install (Claude Code)
+## Quick start
+
+**1. Install the plugin** (inside Claude Code):
 ```
-/plugin marketplace add <owner>/walkthru
+/plugin marketplace add Tusharsaxena2001/walkthru
 /plugin install walkthru
 ```
-Then in your project, tell Claude: *"Make a demo video of this app, for new customers, about 4 minutes"* (or run `/walkthru`). Claude installs what it needs on first run (Chromium, ffmpeg, a free offline voice; no sudo, no accounts), explores your product, drafts a storyboard for your approval, rehearses, records, narrates and checks the video.
 
-## What you get (`demo/out/`)
-`walkthru.mp4` (1080p, chapters embedded), `captions.srt`, `thumbnail.png`, `preview.gif`, and `report.md` listing quality checks, auto-corrected steps and anything the recording left behind in real systems.
+**2. Ask for a demo**, in your project folder:
+```
+/walkthru
+```
+or just say it in plain words:
+> Make a 3 minute demo video of this app for new customers. Use the free voice.
 
-## How it feels human
-Eased cursor paths, keystroke-by-keystroke typing with natural rhythm, hover-before-click, smooth scrolling, highlight rings, idle waits sped up. Narration is generated first and each sentence is bound to the step it describes, so the voice never runs ahead of the screen. Steps that cannot find their target are healed to the closest label on screen and reported.
+**3. Approve the storyboard** Claude shows you (scenes, what is said, how long it is). Then wait for the video.
+
+That is all. You do not install anything yourself. On the first run Claude sets up the tools it needs (see [What gets installed](#what-gets-installed)).
+
+You get these files in `demo/out/`:
+
+| File | What it is |
+|---|---|
+| `walkthru.mp4` | the finished 1080p video, with chapters |
+| `captions.srt` | subtitles |
+| `thumbnail.png`, `preview.gif` | cover image and a short preview |
+| `report.md` | quality checks, steps that were auto-corrected, and anything the recording left behind in real systems (so you can clean up) |
+
+## Choosing the voice
+
+Narration is generated for you. There are two voices, and you can switch at any time.
+
+| Voice | Cost | Needs | Sound |
+|---|---|---|---|
+| **Free local voice** (`piper`), the default | free | nothing, no account, works offline | clear but a little robotic |
+| **ElevenLabs** (`elevenlabs`) | uses your ElevenLabs characters (free plan: about 10,000 a month) | an ElevenLabs API key | natural |
+
+### Use the free voice (default)
+Do nothing. If Claude asks which voice you want, answer "free voice". No key is ever requested.
+
+### Switch to ElevenLabs
+1. In ElevenLabs: Profile, then API Keys, create a key. Pick a voice and copy its Voice ID.
+2. Put both in a file named `.env.demo` in your project root (it is git-ignored, and Walkthru never prints it):
+   ```
+   ELEVEN_LABS_API_KEY=your_key_here
+   VOICE_ID=your_voice_id_here
+   ```
+3. Tell Claude, "use ElevenLabs for the voice", or edit `demo/demo.yaml`:
+   ```yaml
+   voice:
+     provider: elevenlabs
+   ```
+4. Check the cost before spending anything:
+   ```
+   walkthru voice --dry
+   ```
+   It prints how many characters will be used. Only new or changed sentences are ever sent, so re-running costs nothing for text you did not change.
+
+Notes on ElevenLabs:
+- **Free plan:** voices from the public Voice Library are not available through the API (you get an HTTP 402 error). Use one of the default voices, for example Adam `pNInz6obpgDQGcFmaJgB` or Antoni `ErXwobaYiN019PkySvjV`.
+- **Go back to the free voice:** set `provider: piper`.
+- **Voice speed:** `voice.tempo` slows or speeds the voice (`0.85` to `1.0`, default `0.92`).
+
+## What it does
+
+- **Explores your product** (live site, README, `--help`, or the code itself) and drafts the storyboard, so you don't write scripts.
+- **Rehearses first**: every step runs quickly without recording, so problems show up early.
+- **Records like a person**: smooth cursor movement, typing with natural rhythm, hover before click, smooth scrolling, highlight rings, waits sped up.
+- **Keeps voice and screen in sync**: the voice is generated first, and each sentence is tied to the step it describes, so it never runs ahead of the screen.
+- **Fixes small mistakes**: if a button name does not match, it uses the closest one on screen and tells you in the report.
+- **Checks the result**: blank frames, loud or quiet audio, long silences, frozen pictures, and secrets or error text that appeared on screen.
+- **Cheap to change**: edit one scene or one sentence and only that part is redone.
 
 ## Modes
+
 | Mode | For |
 |---|---|
-| `web` | websites, dashboards, SaaS (Playwright) |
-| `terminal` | CLI tools, TUIs, AI agents (a real shell in a recorded terminal) |
-| `code` | codebase walkthroughs (syntax-highlighted files, line-range focus, file tree) |
-| mixed | any scene can set its own `mode` |
-| desktop (Linux/X11) | native apps via `screen-record` / `screen-cut` (older workflow) |
+| `web` | websites, dashboards, SaaS apps |
+| `terminal` | CLI tools, terminal apps, AI agents (a real shell, recorded) |
+| `code` | codebase walkthroughs (highlighted files, line ranges, file tree) |
 
-## Voices
-`piper` (default, free, offline), `elevenlabs` (put `ELEVEN_LABS_API_KEY` and `VOICE_ID` in `.env.demo`; `walkthru voice --dry` shows the character cost), `tone` (silent beeps, for tests).
+A single video can mix modes: each scene can set its own `mode`.
 
-## CLI
-`walkthru init | doctor [--fix] | plan | rehearse | voice | record [scenes] | build | make | verify`. `make` does everything; only changed scenes are re-recorded and only new sentences are synthesised. Storyboard format: `templates/demo.yaml`. Skills: `/walkthru` (headline), `/record-demo`, `/sync-narration`, `/verify-video` (desktop workflow).
+Desktop apps (Linux only for now) use the older `screen-record` and `screen-cut` commands described in the `/record-demo` skill.
 
-## Development
-`pnpm typecheck | lint | test | build`. `pnpm build` bundles `dist/walkthru.mjs`, which is committed so the plugin works without an install step. Layers: `domain/` (pure: sync, ramp, motion, secrets, heal), `studio/` (recorders, voice, assembly, QA), `cli/`.
+## The storyboard (`demo/demo.yaml`)
+
+Claude writes it for you. You can read or edit it. A small example:
+
+```yaml
+title: Acme Dashboard Tour
+mode: web
+baseUrl: https://app.acme.com
+voice: { provider: piper }          # or elevenlabs
+intro: { title: Acme, say: "Welcome to Acme. Here is a quick tour." }
+outro: { title: Thank you, say: "That is it. Thanks for watching." }
+scenes:
+  - id: sign-in
+    setup:                           # logins and loading, trimmed from the video
+      - go: /login
+    steps:
+      - say: "First, we sign in with our email."
+      - type: jane@acme.com
+        into: Email
+      - click: Sign in
+```
+
+Common steps: `go`, `click`, `type` (with `into`), `press`, `scroll`, `wait`, `highlight`, `blur`, `say`, `run` (terminal), `open` and `lines` (code). Use `${NAME}` to insert a value from `.env.demo`. Full list and examples: `templates/demo.yaml` and `skills/walkthru/SKILL.md`.
+
+## Commands (Claude runs these; you rarely need to)
+
+```
+walkthru make             everything: setup, voice, record, build, checks, report
+walkthru plan             check the storyboard and show length and voice cost
+walkthru rehearse         quick test run, no recording
+walkthru voice [--dry]    generate narration (--dry shows the cost only)
+walkthru record [scenes]  record changed scenes
+walkthru build            assemble the video
+walkthru verify           re-run the quality checks
+walkthru doctor [--fix]   see or install what is missing
+```
+
+## What gets installed
+
+On the first run only, into `~/.cache/walkthru/runtime` (nothing in your project, no admin rights):
+
+- Chromium browser, about 150 MB (renders every scene)
+- ffmpeg, if you do not already have it
+- the free Piper voice, about 80 MB
+- small packages for the terminal and code viewers
+
+You need Node.js 22 or newer. Nothing is uploaded anywhere except the text sent to ElevenLabs if you choose that voice.
+
+## Safe to use on real systems
+
+- Credentials live in `.env.demo`, which is git-ignored and never printed. Their values are scanned for on screen, so they cannot end up in the video unnoticed.
+- Recording happens against the real product, so prefer a test account or staging. Everything the run creates is listed in `report.md` ("Left behind") so you can clean it up.
 
 ## Limits
-Third-party iframes (e-sign, payments) hide the injected cursor and ignore dark mode. Desktop capture is Linux/X11 only for now. Terminal mode needs a prebuilt node-pty for your OS (installed automatically).
+
+- Third-party pop-ups and embedded pages (e-signing, payments) do not show the cursor and ignore dark mode.
+- Desktop-app capture is Linux (X11) only for now.
+- The free voice is clearly synthetic; use ElevenLabs for a more natural result.
+
+## Development
+
+`pnpm typecheck | lint | test | build`. `pnpm build` creates `dist/walkthru.mjs`, which is committed so the plugin works without an install step. Layers: `src/domain` (pure logic: sync, speed ramps, motion, secrets, healing), `src/studio` (recorders, voice, assembly, quality checks), `src/cli`. MIT licensed.
