@@ -8,13 +8,13 @@ Tell Claude Code about your product and get a finished, narrated demo video. It 
 
 In the Claude Code terminal app, type:
 ```
-/plugin marketplace add Tusharsaxena2001/walkthru
+/plugin marketplace add Tusharsaxena3112/walkthru
 /plugin install walkthru@walkthru
 ```
 
 In an editor panel (for example VS Code) where `/plugin` is not offered, run this in any terminal instead, then restart your Claude session:
 ```
-claude plugin marketplace add Tusharsaxena2001/walkthru
+claude plugin marketplace add Tusharsaxena3112/walkthru
 claude plugin install walkthru@walkthru
 ```
 
