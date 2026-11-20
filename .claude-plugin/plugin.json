@@ -1,0 +1,7 @@
+{
+  "name": "walkthru",
+  "version": "0.3.0",
+  "description": "Describe your product, get a narrated demo video. Web apps, terminal apps and AI agents, codebase walkthroughs and tutorials. Installs its own tools; free local voice or ElevenLabs.",
+  "author": { "name": "Fiftyfive" },
+  "keywords": ["demo", "video", "screen-recording", "voice-over", "playwright", "tutorial"]
+}

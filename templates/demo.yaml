@@ -1,0 +1,25 @@
+# Walkthru storyboard. Claude writes and edits this for you; you can edit it too.
+title: My Product Walkthrough
+mode: web                      # web | terminal | code
+baseUrl: https://example.com
+theme: dark                    # light | dark (optional)
+voice:
+  provider: piper              # piper (free, offline) | elevenlabs | tone (silent beeps for tests)
+  tempo: 0.92                  # <1 slows the voice
+intro:
+  title: My Product
+  sub: Product walkthrough
+  say: Welcome to My Product. Here's a quick tour.
+outro:
+  title: Thank you
+  sub: My Product
+  say: And that's it. Thanks for watching, and have a nice day!
+scenes:
+  - id: home
+    title: Home page
+    steps:
+      - go: /
+      - say: This is the home page, where everything starts.
+      - scroll: 500
+      - highlight: "Learn more"
+      - say: A single click gets you to the details.

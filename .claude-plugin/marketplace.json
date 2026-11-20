@@ -1,0 +1,17 @@
+{
+  "name": "walkthru",
+  "owner": {
+    "name": "Fiftyfive"
+  },
+  "plugins": [
+    {
+      "name": "walkthru",
+      "source": "./",
+      "description": "Describe your product, get a finished narrated demo video (web, terminal, code, tutorial)."
+    }
+  ],
+  "metadata": {
+    "description": "Walkthru: describe your product, get a narrated demo video"
+  },
+  "description": "Walkthru: describe your product, get a narrated demo video"
+}

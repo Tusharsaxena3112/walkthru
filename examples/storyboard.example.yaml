@@ -1,0 +1,23 @@
+# Synthetic example. Adjust window titles and the tmux session to your own desktop.
+title: Example product demo
+size: 1920x1080
+fps: 30
+terminal: demo        # tmux session used by `type` steps
+tail: 3
+clips:
+  - id: 1A
+    narration: "This is the dashboard. Everything you will see is configured here."
+    steps:
+      - do: window
+        match: "Example Dashboard"
+      - do: wait
+        seconds: 8
+  - id: 2A
+    narration: "On the laptop, one command does the setup."
+    steps:
+      - do: window
+        match: "DEMO-TERMINAL"
+      - do: type
+        text: "echo hello from the demo"
+      - do: wait
+        seconds: 6

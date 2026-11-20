@@ -1,0 +1,37 @@
+{
+  "name": "walkthru",
+  "version": "0.3.0",
+  "description": "Describe your product, get a narrated demo video: web apps, terminals, code walkthroughs, desktop",
+  "type": "module",
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "walkthru": "dist/walkthru.mjs"
+  },
+  "scripts": {
+    "build": "tsc --noEmit && esbuild src/cli/main.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/walkthru.mjs --banner:js=\"import{createRequire as __cr}from'node:module';const require=__cr(import.meta.url);\"",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "yaml": "^2.8.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.1",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
+    "esbuild": "^0.28.2",
+    "eslint": "^9.0.0",
+    "highlight.js": "^11.12.0",
+    "playwright": "^1.65.1",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^5.0.3"
+  },
+  "license": "MIT"
+}
